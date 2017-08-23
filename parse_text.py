@@ -22,17 +22,22 @@ def parse_file(filename, lower_case=False):
 
 	return contents
 
-def create_char_dict(text, n=3):
-	char_dict = {}
+def create_n_gram_dict(text, n=3, by_word=False):
+	if by_word:
+		text = text.split()
+
+	gram_dict = {}
 
 	for i in range(len(text) - n + 1):
 		n_gram = text[i:i+n]
-		char_dict[n_gram] = char_dict.get(n_gram, dict())			
+		if by_word:
+			n_gram = " ".join(n_gram)
+		gram_dict[n_gram] = gram_dict.get(n_gram, dict())			
 
 		if i != (len(text)-n):
-			char_dict[n_gram][text[i+n]] = char_dict[n_gram].get(text[i+n], 0) + 1
+			gram_dict[n_gram][text[i+n]] = gram_dict[n_gram].get(text[i+n], 0) + 1
 				
-	return char_dict
+	return gram_dict
 
 def save_dict(markov_dict):
 	filename = "markov_dict.pickle"

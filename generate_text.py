@@ -16,11 +16,15 @@ def weighted_sample(n_gram_counts):
 		if rnd < 0:
 			return token
 
-def make_text(start, length, markov_dict):
+def make_text(start, length, markov_dict, by_word=False):
 	
 	current_gram = start
 	result = start 
-	n = len(list(markov_dict.keys())[0])
+	
+	if by_word:
+		n = len(list(markov_dict.keys())[0].split())
+	else:
+		n = len(list(markov_dict.keys())[0])
 
 	for i in range(length):
 		options = markov_dict[current_gram]
@@ -29,8 +33,17 @@ def make_text(start, length, markov_dict):
 			break
 
 		choice = weighted_sample(options)
-		result += choice
-		current_gram = result[-n:]	
+
+		if by_word:
+			result += " "
+			result += choice
+			result = result.split()
+			current_gram = result[-n:]
+			result = " ".join(result)
+			current_gram = " ".join(current_gram)
+		else:
+			result += choice
+			current_gram = result[-n:]
 
 	return result
 	
